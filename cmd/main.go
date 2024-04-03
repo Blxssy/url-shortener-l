@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -20,7 +21,6 @@ var (
 
 	length int = 5
 
-	letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	baseURL = "http://localhost:8080/"
 )
 
@@ -71,7 +71,7 @@ func shortURLHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortURL := generateShortURL()
+	shortURL := generateShortURL(5)
 
 	if useDB {
 		_, err := db.Exec("INSERT INTO urls (shortURL, longURL) VALUES ($1, $2)", shortURL, longURL)
@@ -114,10 +114,17 @@ func getLongURLFromDB(shortURL string) (string, error) {
 	return longURL, nil
 }
 
-func generateShortURL() string {
-	var b strings.Builder
-	for i := 0; i < length; i++ {
-		b.WriteRune(letters[rand.Intn(len(letters))])
+func generateShortURL(size int) string {
+	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+		"abcdefghijklmnopqrstuvwxyz" +
+		"0123456789")
+
+	b := make([]rune, size)
+	for i := range b {
+		b[i] = chars[rnd.Intn(len(chars))]
 	}
-	return b.String()
+
+	return string(b)
 }
