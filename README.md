@@ -1,5 +1,7 @@
 ## Simple url shortener
 
+`connStr := "user=postgres password=postgres dbname=testcase sslmode=disable"` - в данной строке нужно изменить данный бд main.go:27
+
 `go run ./cmd/` - Без использования бд
 
 `go run ./cmd/ -d` - С использованием бд
