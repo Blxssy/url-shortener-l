@@ -19,8 +19,6 @@ var (
 	db      *sql.DB
 	storage = make(map[string]string)
 
-	length int = 5
-
 	baseURL = "http://localhost:8080/"
 )
 
@@ -60,8 +58,7 @@ func toLongURLHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	http.Redirect(w, r, longURL, http.StatusFound)
+	fmt.Fprintf(w, longURL)
 }
 
 func shortURLHandler(w http.ResponseWriter, r *http.Request) {
